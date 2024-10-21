@@ -7,7 +7,20 @@
 
 import SwiftUI
 
+struct Task: Identifiable {
+    var id: Int
+    var title: String
+}
+
 struct ContentView: View {
+    @State private var tasks = [
+        Task(id: 1, title: "Washing dishes"),
+        Task(id: 2, title: "Vacuuming"),
+        Task(id: 3, title: "Coding challeng"),
+        Task(id: 4, title: "Cook dinner"),
+        Task(id: 5, title: "Recruitment process"),
+    ]
+    
     @State private var newTask = ""
     
     var body: some View {
@@ -42,22 +55,24 @@ struct ContentView: View {
                         radius: CGFloat(0.8))
                 }
                 .padding(.vertical, 40)
-                HStack {
-                    Text("Washing dishes")
-                    Spacer()
-                    HStack {
-                        Button(action: completeTask) {
-                            Image(systemName: "checkmark")
-                        }
-                        Button(action: deleteTask) {
-                            Image(systemName: "trash")
-                        }
-                        .padding(.horizontal, 10)
-                        Button(action: editTask) {
-                            Image(systemName: "pencil")
+                    ForEach(tasks) { task in
+                        HStack {
+                        Text(task.title)
+                        Spacer()
+                            HStack {
+                                Button(action: completeTask) {
+                                    Image(systemName: "checkmark")
+                                }
+                                Button(action: deleteTask) {
+                                    Image(systemName: "trash")
+                                }
+                                .padding(.horizontal, 10)
+                                Button(action: editTask) {
+                                    Image(systemName: "pencil")
+                                }
+                            }
                         }
                     }
-                }
                 .padding()
                 .background(.mint)
                 .foregroundColor(.white)
