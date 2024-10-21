@@ -17,12 +17,12 @@ struct ContentView: View {
     @State private var tasks: [Task] = [
         Task(id: 1, title: "Washing dishes", completed: false),
         Task(id: 2, title: "Vacuuming", completed: false),
-        Task(id: 3, title: "Coding challeng", completed: false),
+        Task(id: 3, title: "Coding challenge", completed: false),
         Task(id: 4, title: "Cook dinner", completed: false),
         Task(id: 5, title: "Recruitment process", completed: false),
     ]
     
-    @State private var newTask = ""
+    @State private var inputValue = ""
     
     var body: some View {
             VStack(alignment: .leading) {
@@ -34,16 +34,15 @@ struct ContentView: View {
                 .bold()
                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                 HStack {
-                    TextField("New task...", text: $newTask)
-                        .onSubmit {
-                            validate(createdTask: newTask)
-                        }
+                    TextField("New task...", text: $inputValue)
                         .autocorrectionDisabled()
                         .textFieldStyle(.roundedBorder)
                         .shadow(
                             color: .gray,
                             radius: CGFloat(0.8))
-                    Button(action: addNewTask) {
+                    Button {
+                        addNewTask()
+                    } label: {
                         Image(systemName: "plus")
                             .foregroundColor(.white)
                             .frame(width: 40, height: 40)
@@ -57,7 +56,7 @@ struct ContentView: View {
                 }
                 .padding(.vertical, 40)
                 ForEach(tasks) { task in
-                        HStack {
+                    HStack {
                             Text(task.title)
                                 .strikethrough(task.completed == true, color: .white)
                         Spacer()
@@ -95,15 +94,16 @@ struct ContentView: View {
         tasks.removeAll() { $0.id == id }
     }
     
+    func addNewTask() {
+        tasks.append(Task(id: 10, title: inputValue, completed: false))
+        inputValue = ""
+    }
+    
     func editTask(id: Int) {
         
     }
     
     func validate(createdTask: String) {
-        
-    }
-    
-    func addNewTask() {
         
     }
 }
