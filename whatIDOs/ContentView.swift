@@ -10,15 +10,16 @@ import SwiftUI
 struct Task: Identifiable {
     var id: Int
     var title: String
+    var completed: Bool
 }
 
 struct ContentView: View {
-    @State private var tasks = [
-        Task(id: 1, title: "Washing dishes"),
-        Task(id: 2, title: "Vacuuming"),
-        Task(id: 3, title: "Coding challeng"),
-        Task(id: 4, title: "Cook dinner"),
-        Task(id: 5, title: "Recruitment process"),
+    @State private var tasks: [Task] = [
+        Task(id: 1, title: "Washing dishes", completed: false),
+        Task(id: 2, title: "Vacuuming", completed: false),
+        Task(id: 3, title: "Coding challeng", completed: false),
+        Task(id: 4, title: "Cook dinner", completed: false),
+        Task(id: 5, title: "Recruitment process", completed: false),
     ]
     
     @State private var newTask = ""
@@ -55,19 +56,26 @@ struct ContentView: View {
                         radius: CGFloat(0.8))
                 }
                 .padding(.vertical, 40)
-                    ForEach(tasks) { task in
+                ForEach(tasks) { task in
                         HStack {
-                        Text(task.title)
+                            Text(task.title)
+                                .strikethrough(task.completed == true, color: .white)
                         Spacer()
                             HStack {
-                                Button(action: completeTask) {
+                                Button {
+                                    
+                                } label: {
                                     Image(systemName: "checkmark")
-                                }
-                                Button(action: deleteTask) {
+                                } 
+                                Button {
+                                    deleteTask(id: task.id)
+                                } label: {
                                     Image(systemName: "trash")
                                 }
                                 .padding(.horizontal, 10)
-                                Button(action: editTask) {
+                                Button {
+                                    editTask(id: task.id)
+                                } label: {
                                     Image(systemName: "pencil")
                                 }
                             }
@@ -83,15 +91,11 @@ struct ContentView: View {
             Spacer()
         }
     
-    func editTask() {
-        
+    func deleteTask(id: Int) {
+        tasks.removeAll() { $0.id == id }
     }
     
-    func completeTask() {
-        
-    }
-    
-    func deleteTask() {
+    func editTask(id: Int) {
         
     }
     
