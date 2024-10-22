@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct Task: Identifiable {
-    var id: Int
+    var id = UUID()
     var title: String
     var completed: Bool
 }
 
 struct ContentView: View {
     @State private var tasks: [Task] = [
-        Task(id: 0, title: "Dishes", completed: false),
-        Task(id: 1, title: "Homework", completed: false)
+        Task(title: "Dishes", completed: false),
+        Task(title: "Homework", completed: false)
     ]
     @State private var inputValue = ""
     
@@ -95,7 +95,7 @@ struct ContentView: View {
         }
     }
     
-    func deleteTask(id: Int) {
+    func deleteTask(id: UUID ) {
         tasks.removeAll() { $0.id == id }
     }
     
@@ -104,12 +104,14 @@ struct ContentView: View {
     }
     
     func addNewTask() {
-        tasks.append(Task(id: 10, title: inputValue, completed: false))
+        tasks.append(Task(title: inputValue, completed: false))
         inputValue = ""
     }
     
-    func completeTask(id: Int){
-        tasks[id].completed.toggle()
+    func completeTask(id: UUID){
+        if let completedTaskID = tasks.firstIndex(where: {$0.id == id}) {
+            tasks[completedTaskID].completed.toggle()
+        }
     }
 }
 
