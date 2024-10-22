@@ -15,24 +15,28 @@ struct Task: Identifiable {
 
 struct ContentView: View {
     @State private var tasks: [Task] = [
-        Task(id: 1, title: "Washing dishes", completed: false),
-        Task(id: 2, title: "Vacuuming", completed: false),
-        Task(id: 3, title: "Coding challenge", completed: false),
-        Task(id: 4, title: "Cook dinner", completed: false),
-        Task(id: 5, title: "Recruitment process", completed: false),
+        Task(id: 0, title: "Dishes", completed: false),
+        Task(id: 1, title: "Homework", completed: false)
     ]
-    
     @State private var inputValue = ""
     
     var body: some View {
-            VStack(alignment: .leading) {
-                VStack {
+        NavigationStack {
+            VStack {
+                HStack {
                     Text("whatIDOs")
+                        .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                        .bold()
+                        .foregroundColor(.mint)
+                    Spacer()
+                    Button {
+                        deleteAllTasks()
+                    } label: {
+                        Text("Delete all")
+                    }
+                    .padding(.vertical, 20)
                 }
-                .foregroundColor(.mint)
-                .opacity(2)
-                .bold()
-                .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                .foregroundColor(.gray)
                 HStack {
                     TextField("New task...", text: $inputValue)
                         .autocorrectionDisabled()
@@ -54,44 +58,49 @@ struct ContentView: View {
                         color: .gray,
                         radius: CGFloat(0.8))
                 }
-                .padding(.vertical, 40)
-                ForEach(tasks) { task in
-                    HStack {
+                .padding(.vertical, 20)
+                if tasks.count == 0 {
+                    Text("Currently no task")
+                        .foregroundColor(.gray)
+                } else {
+                    ForEach(tasks) { task in
+                        HStack {
                             Text(task.title)
-                                .strikethrough(task.completed == true, color: .white)
-                        Spacer()
+                                .strikethrough(task.completed == true, color: .red)
+                            Spacer()
                             HStack {
-                                Button {
-                                    
-                                } label: {
-                                    Image(systemName: "checkmark")
-                                } 
                                 Button {
                                     deleteTask(id: task.id)
                                 } label: {
                                     Image(systemName: "trash")
                                 }
-                                .padding(.horizontal, 10)
+                                .padding(.horizontal, 20)
                                 Button {
-                                    editTask(id: task.id)
+                                    completeTask(id: task.id)
                                 } label: {
-                                    Image(systemName: "pencil")
+                                    Image(systemName: "checkmark")
                                 }
                             }
                         }
                     }
-                .padding()
-                .background(.mint)
-                .foregroundColor(.white)
-                .cornerRadius(30)
-                .bold()
+                    .padding()
+                    .background(.mint)
+                    .foregroundColor(.white)
+                    .cornerRadius(30)
+                    .bold()
+                }
             }
             .padding()
             Spacer()
         }
+    }
     
     func deleteTask(id: Int) {
         tasks.removeAll() { $0.id == id }
+    }
+    
+    func deleteAllTasks() {
+        tasks.removeAll()
     }
     
     func addNewTask() {
@@ -99,15 +108,14 @@ struct ContentView: View {
         inputValue = ""
     }
     
-    func editTask(id: Int) {
-        
-    }
-    
-    func validate(createdTask: String) {
-        
+    func completeTask(id: Int){
+        tasks[id].completed.toggle()
     }
 }
+
 
 #Preview {
     ContentView()
 }
+
+
