@@ -14,10 +14,7 @@ struct Task: Identifiable {
 }
 
 struct ContentView: View {
-    @State private var tasks: [Task] = [
-        Task(title: "Dishes", completed: false),
-        Task(title: "Homework", completed: false)
-    ]
+    @State private var tasks: [Task] = []
     @State private var inputValue = ""
     
     var body: some View {
