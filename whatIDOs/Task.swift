@@ -5,14 +5,18 @@
 //  Created by Natalia Nikiforuk on 22/10/2024.
 //
 
-import SwiftUI
+import Foundation
+import SwiftData
 
-struct Task: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+@Model
+class Task: Identifiable {
+    var id = UUID()
+    var title: String
+    var completed: Bool
+    
+    init(id: UUID = UUID(), title: String, completed: Bool) {
+        self.id = id
+        self.title = title
+        self.completed = completed
     }
-}
-
-#Preview {
-    Task()
 }

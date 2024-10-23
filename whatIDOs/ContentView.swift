@@ -6,15 +6,11 @@
 //
 
 import SwiftUI
-
-struct Task: Identifiable {
-    var id = UUID()
-    var title: String
-    var completed: Bool
-}
+import SwiftData
 
 struct ContentView: View {
-    @State private var tasks: [Task] = []
+    @Query(sort: \Task.id, order: .reverse) var tasks: [Task]
+    @Environment(\.modelContext) private var context
     @State private var inputValue = ""
     
     var body: some View {
@@ -27,7 +23,7 @@ struct ContentView: View {
                         .foregroundColor(.mint)
                     Spacer()
                     Button {
-                        deleteAllTasks()
+                        //                        deleteAllTasks()
                     } label: {
                         Text("Delete all")
                     }
@@ -56,30 +52,25 @@ struct ContentView: View {
                         radius: CGFloat(0.8))
                 }
                 .padding(.vertical, 20)
-                if tasks.count == 0 {
+                if tasks.isEmpty {
                     Text("Currently no task")
                         .foregroundColor(.gray)
                 } else {
-                    ForEach(tasks) { task in
+                    ForEach(tasks) {task in
                         HStack {
                             Text(task.title)
                                 .strikethrough(task.completed == true, color: .red)
                             Spacer()
                             HStack {
                                 Button {
-                                    deleteTask(id: task.id)
-                                } label: {
-                                    Image(systemName: "trash")
-                                }
-                                .padding(.horizontal, 20)
-                                Button {
-                                    completeTask(id: task.id)
+                                    //                                    completeTask(id: task.id)
                                 } label: {
                                     Image(systemName: "checkmark")
                                 }
                             }
                         }
                     }
+                    .onDelete(perform: deleteTask)
                     .padding()
                     .background(.mint)
                     .foregroundColor(.white)
@@ -92,29 +83,31 @@ struct ContentView: View {
         }
     }
     
-    func deleteTask(id: UUID ) {
-        tasks.removeAll() { $0.id == id }
+    func deleteTask(_ indexSet: IndexSet) {
+        for index in indexSet {
+            let task = tasks[index]
+            context.delete(task)
+        }
     }
     
-    func deleteAllTasks() {
-        tasks.removeAll()
-    }
+    //    func deleteAllTasks() {
+    //        tasks.removeAll()
+    //    }
     
     func addNewTask() {
-        tasks.append(Task(title: inputValue, completed: false))
+        let newTask = Task(title: inputValue, completed: false)
+        context.insert(newTask)
         inputValue = ""
     }
     
-    func completeTask(id: UUID){
-        if let completedTaskID = tasks.firstIndex(where: {$0.id == id}) {
-            tasks[completedTaskID].completed.toggle()
-        }
-    }
+    //    func completeTask(id: UUID){
+    //        if let completedTaskID = tasks.firstIndex(where: {$0.id == id}) {
+    //            tasks[completedTaskID].completed.toggle()
+    //        }
+    //    }
 }
-
 
 #Preview {
     ContentView()
+        .modelContainer(for: Task.self)
 }
-
-
