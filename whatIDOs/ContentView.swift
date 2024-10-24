@@ -102,9 +102,13 @@ struct ContentView: View {
         }
     
     private func addNewTask() {
-        let newTask = Task(title: inputValue, completed: false)
-        context.insert(newTask)
-        inputValue = ""
+        if inputValue.isEmpty {
+            return
+        } else {
+            let newTask = Task(title: inputValue, completed: false)
+            context.insert(newTask)
+            inputValue = ""
+        }
     }
     
     func completeTask(_ task: Task){
