@@ -23,7 +23,7 @@ struct ContentView: View {
                         .foregroundColor(.mint)
                     Spacer()
                     Button {
-                        //                        deleteAllTasks()
+                        deleteAllTasks()
                     } label: {
                         Text("Delete all")
                     }
@@ -63,9 +63,12 @@ struct ContentView: View {
                             Spacer()
                             HStack {
                                 Button {
-                                    //                                    completeTask(id: task.id)
+                                    completeTask(task)
                                 } label: {
-                                    Image(systemName: "checkmark")
+                                    Image(systemName: task.completed ? "circle.fill" : "circle")
+                                }
+                                .onTapGesture {
+                                    completeTask(task)
                                 }
                             }
                         }
@@ -90,24 +93,26 @@ struct ContentView: View {
         }
     }
     
-    //    func deleteAllTasks() {
-    //        tasks.removeAll()
-    //    }
+        func deleteAllTasks() {
+            do {
+                try context.delete(model: Task.self)
+            } catch {
+                print("Failed to delete all tasks.")
+            }
+        }
     
-    func addNewTask() {
+    private func addNewTask() {
         let newTask = Task(title: inputValue, completed: false)
         context.insert(newTask)
         inputValue = ""
     }
     
-    //    func completeTask(id: UUID){
-    //        if let completedTaskID = tasks.firstIndex(where: {$0.id == id}) {
-    //            tasks[completedTaskID].completed.toggle()
-    //        }
-    //    }
+    func completeTask(_ task: Task){
+        task.completed.toggle()
+    }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Task.self)
+        .modelContainer(for: Task.self, inMemory: true)
 }
